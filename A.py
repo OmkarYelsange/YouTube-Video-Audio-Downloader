@@ -14,7 +14,7 @@ import shutil # Import shutil for removing temporary directories
 
 app = Flask(__name__)
 # IMPORTANT: Change this to a strong, unique secret key!
-app.config['SECRET_KEY'] = 'your-secret-key-here-please-change-this-for-security'
+app.config['SECRET_KEY'] = '21b73249a34e893eefc6c7efa744fde53ae334627c613a83feef32a575bbff25'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///youtube_downloader.db'
 app.config['UPLOAD_FOLDER'] = 'downloads' # This folder will now store permanent downloads
 
