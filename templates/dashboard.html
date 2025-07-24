@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <div class="mb-8">
+        <h2 class="text-3xl font-bold mb-2">Download Center</h2>
+        <p class="opacity-75">Enter a YouTube URL to download video or audio</p>
+    </div>
+    
+    <div class="card border rounded-xl p-8 mb-8">
+        <form id="downloadForm" action="{{ url_for('download') }}" method="POST">
+            <div class="grid md:grid-cols-4 gap-4 items-end">
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium mb-2">YouTube URL</label>
+                    <input type="url" id="youtubeUrl" name="url" placeholder="https://www.youtube.com/watch?v=..." 
+                            class="w-full px-4 py-3 card border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium mb-2">Download Type</label>
+                    <select id="downloadType" name="type" class="w-full px-4 py-3 card border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="video">Video (MP4)</option>
+                        <option value="audio">Audio (MP3)</option>
+                    </select>
+                </div>
+                
+                <button type="submit" id="downloadBtn" 
+                        class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                    <i class="fas fa-download mr-2"></i>
+                    Download
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <div class="card border rounded-xl p-8">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold">Your Downloads</h3>
+            <button onclick="checkStatus()" class="card border px-4 py-2 rounded-lg hover:opacity-80 transition-opacity">
+                <i class="fas fa-refresh mr-2"></i>
+                Refresh
+            </button>
+        </div>
+        
+        <div id="downloadsList">
+            {% if downloads %}
+                {% for download in downloads %}
+                <div class="card border rounded-lg p-4 mb-4">
+                    <div class="flex justify-between items-center">
+                        <div class="flex-1">
+                            <h4 class="font-semibold mb-1">{{ download.title }}</h4>
+                            <div class="text-sm opacity-75">
+                                <span class="mr-4">
+                                    <i class="fas fa-{{ 'video' if download.download_type == 'video' else 'music' }} mr-1"></i>
+                                    {{ download.download_type.title() }}
+                                </span>
+                                <span class="mr-4">{{ download.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                                <span class="status-{{ download.status }}">
+                                    {% if download.status == 'completed' %}
+                                        <i class="fas fa-check-circle text-green-600 mr-1"></i>
+                                    {% elif download.status == 'downloading' %}
+                                        <i class="fas fa-spinner fa-spin text-blue-600 mr-1"></i>
+                                    {% elif download.status == 'failed' %}
+                                        <i class="fas fa-times-circle text-red-600 mr-1"></i>
+                                    {% else %}
+                                        <i class="fas fa-clock text-yellow-600 mr-1"></i>
+                                    {% endif %}
+                                    {{ download.status.title() }}
+                                </span>
+                            </div>
+                        </div>
+                        {% if download.status == 'completed' and download.filename %}
+                        <a href="{{ url_for('download_file', filename=download.filename) }}" 
+                            class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                            <i class="fas fa-download mr-1"></i>
+                            Download
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center py-12 opacity-75">
+                    <i class="fas fa-inbox text-4xl mb-4"></i>
+                    <p>No downloads yet. Start by entering a YouTube URL above.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('downloadForm').addEventListener('submit', function() {
+    const btn = document.getElementById('downloadBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Preparing Download...';
+});
+
+// Reset the button state on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const btn = document.getElementById('downloadBtn');
+    const flashMessagesDiv = document.querySelector('.mb-4'); // Check for flash message container
+
+    // If there were flash messages (meaning a redirect just happened after an action)
+    // or if the button is still disabled for some reason, reset it.
+    if (flashMessagesDiv || btn.disabled) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-download mr-2"></i>Download';
+    }
+
+    // Call checkStatus immediately on load to update the download list
+    checkStatus();
+});
+
+
+async function checkStatus() {
+    try {
+        const response = await fetch('/check_status');
+        const result = await response.json();
+        
+        const downloadsList = document.getElementById('downloadsList');
+        
+        if (result.downloads.length === 0) {
+            downloadsList.innerHTML = `
+                <div class="text-center py-12 opacity-75">
+                    <i class="fas fa-inbox text-4xl mb-4"></i>
+                    <p>No downloads yet. Start by entering a YouTube URL above.</p>
+                </div>
+            `;
+        } else {
+            downloadsList.innerHTML = result.downloads.map(download => `
+                <div class="card border rounded-lg p-4 mb-4">
+                    <div class="flex justify-between items-center">
+                        <div class="flex-1">
+                            <h4 class="font-semibold mb-1">${download.title}</h4>
+                            <div class="text-sm opacity-75">
+                                <span class="mr-4">
+                                    <i class="fas fa-${download.type === 'video' ? 'video' : 'music'} mr-1"></i>
+                                    ${download.type.charAt(0).toUpperCase() + download.type.slice(1)}
+                                </span>
+                                <span class="mr-4">${download.created_at}</span>
+                                <span class="status-${download.status}">
+                                    ${getStatusIcon(download.status)}
+                                    ${download.status.charAt(0).toUpperCase() + download.status.slice(1)}
+                                </span>
+                            </div>
+                        </div>
+                        ${download.status === 'completed' && download.filename ? 
+                            `<a href="/download_file/${download.filename}" 
+                               class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                                <i class="fas fa-download mr-1"></i>
+                                Download
+                            </a>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+    } catch (error) {
+        console.error('Error checking status:', error);
+    }
+}
+
+function getStatusIcon(status) {
+    switch(status) {
+        case 'completed':
+            return '<i class="fas fa-check-circle text-green-600 mr-1"></i>';
+        case 'downloading':
+            return '<i class="fas fa-spinner fa-spin text-blue-600 mr-1"></i>';
+        case 'failed':
+            return '<i class="fas fa-times-circle text-red-600 mr-1"></i>';
+        default:
+            return '<i class="fas fa-clock text-yellow-600 mr-1"></i>';
+    }
+}
+
+// Auto-refresh downloads every 10 seconds
+setInterval(checkStatus, 10000);
+</script>
+{% endblock %}
