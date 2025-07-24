@@ -7,16 +7,17 @@ import os
 import uuid
 from datetime import datetime
 import threading
-import time
+import time # <--- ADDED THIS IMPORT
 from werkzeug.security import generate_password_hash, check_password_hash
-import tempfile # Import tempfile for temporary directory creation
-import shutil # Import shutil for removing temporary directories
+import tempfile
+import shutil
 
 app = Flask(__name__)
 # IMPORTANT: Change this to a strong, unique secret key!
 app.config['SECRET_KEY'] = '21b73249a34e893eefc6c7efa744fde53ae334627c613a83feef32a575bbff25'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///youtube_downloader.db'
-app.config['UPLOAD_FOLDER'] = 'downloads' # This folder will now store permanent downloads
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////var/data/youtube_downloader.db' # Ensure this is correct for Render persistent disk
+# --- MODIFIED UPLOAD_FOLDER TO USE PERSISTENT DISK ---
+app.config['UPLOAD_FOLDER'] = '/var/data/downloads' # This folder will now store permanent downloads on the persistent disk
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
@@ -25,6 +26,7 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 # Create downloads directory if it doesn't exist
+# This will create /var/data/downloads if /var/data is the persistent mount
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # --- Moved @app.after_request to global scope (Fix for "after_request" error) ---
@@ -152,6 +154,7 @@ def download():
         # Determine output template based on type
         if download_type == 'audio':
             output_template = os.path.join(temp_dir, f"{unique_id}.%(ext)s")
+            # --- MODIFIED YDL_OPTS FOR AUDIO ---
             ydl_opts = {
                 'format': 'bestaudio/best',
                 'outtmpl': output_template,
@@ -161,15 +164,22 @@ def download():
                     'preferredquality': '192',
                 }],
                 'noplaylist': True,
+                'sleep_interval': 5, # Add a delay between requests
+                'fragment_retries': 5, # Retry failed fragments
+                'max_downloads': 1, # Process one download at a time
             }
             download_extension = 'mp3'
         else: # video
             output_template = os.path.join(temp_dir, f"{unique_id}.%(ext)s")
+            # --- MODIFIED YDL_OPTS FOR VIDEO ---
             ydl_opts = {
                 'format': 'bestvideo[height<=720]+bestaudio/best[height<=720]/best', # Prioritize 720p, merge video+audio
                 'outtmpl': output_template,
                 'noplaylist': True,
                 'merge_output_format': 'mp4', # Ensure output is mp4 after merging
+                'sleep_interval': 5, # Add a delay between requests
+                'fragment_retries': 5, # Retry failed fragments
+                'max_downloads': 1, # Process one download at a time
             }
             download_extension = 'mp4'
 
@@ -735,7 +745,4 @@ if __name__ == '__main__':
     
     # Create templates on first run (or if they don't exist)
     # You might want to remove this line after the first successful run
-    # if you intend to manually edit your HTML templates.
-    create_templates() 
-    
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    # if you intend to manually edit you
