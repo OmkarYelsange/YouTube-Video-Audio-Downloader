@@ -154,19 +154,21 @@ def download():
         # Determine output template based on type
         if download_type == 'audio':
             output_template = os.path.join(temp_dir, f"{unique_id}.%(ext)s")
-            # --- MODIFIED YDL_OPTS FOR AUDIO ---
+    # --- MODIFIED YDL_OPTS FOR AUDIO ---
             ydl_opts = {
-                'format': 'bestaudio/best',
-                'outtmpl': output_template,
-                'postprocessors': [{
-                    'key': 'FFmpegExtractAudio',
-                    'preferredcodec': 'mp3',
-                    'preferredquality': '192',
-                }],
+            'format': 'bestaudio/best',
+            'outtmpl': output_template,
+            'postprocessors': [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',
+                'preferredquality': '192',
+            }],
                 'noplaylist': True,
                 'sleep_interval': 5, # Add a delay between requests
                 'fragment_retries': 5, # Retry failed fragments
                 'max_downloads': 1, # Process one download at a time
+                'verbose': True, # <--- ADD THIS LINE
+                'no_warnings': False, # <--- Consider adding this as well to see warnings
             }
             download_extension = 'mp3'
         else: # video
@@ -180,6 +182,8 @@ def download():
                 'sleep_interval': 5, # Add a delay between requests
                 'fragment_retries': 5, # Retry failed fragments
                 'max_downloads': 1, # Process one download at a time
+                'verbose': True, # <--- ADD THIS LINE
+                'no_warnings': False, # <--- Consider adding this as well to see warnings
             }
             download_extension = 'mp4'
 
