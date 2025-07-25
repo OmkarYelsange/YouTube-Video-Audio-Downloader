@@ -1,4 +1,4 @@
-#﻿ YouTube-Video-Audio-Downloader
+# YouTube-Video-Audio-Downloader
 
 ## Table of Contents
 - [About](#about)
