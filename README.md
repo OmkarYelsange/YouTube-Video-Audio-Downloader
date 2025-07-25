@@ -1,5 +1,26 @@
 # YouTube-Video-Audio-Downloader
 
+## Preview/Screenshots
+Here are some visual previews of the application's interface:
+
+### Landing Page
+![Application Landing Page1 in White Mode](./assets/Landing_Page1.png)
+![Application Landing Page2 in Black Mode](./assets/Landing_Page2.png)
+*The initial landing page of the application.*
+
+### User Authentication
+![Registration Interface](./assets/Create_Account.png)
+![Login Interface](./assets/Login.png)
+*A secure interface for user registration and login.*
+
+### Dashboard View
+![Main Dashboard Interface](./assets/Dashboard2.png)
+*The primary area where users input YouTube URLs for downloads.*
+
+### Download History
+![User Download History](./assets/Dashboard.png)
+*A section showcasing all your successfully completed downloads.*
+
 ## Table of Contents
 - [About](#about)
 - [Features](#features)
