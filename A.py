@@ -154,36 +154,34 @@ def download():
         # Determine output template based on type
         if download_type == 'audio':
             output_template = os.path.join(temp_dir, f"{unique_id}.%(ext)s")
-    # --- MODIFIED YDL_OPTS FOR AUDIO ---
             ydl_opts = {
-            'format': 'bestaudio/best',
-            'outtmpl': output_template,
-            'postprocessors': [{
-                'key': 'FFmpegExtractAudio',
-                'preferredcodec': 'mp3',
-                'preferredquality': '192',
-            }],
+                'format': 'bestaudio/best',
+                'outtmpl': output_template,
+                'postprocessors': [{
+                    'key': 'FFmpegExtractAudio',
+                    'preferredcodec': 'mp3',
+                    'preferredquality': '192',
+                }],
                 'noplaylist': True,
-                'sleep_interval': 5, # Add a delay between requests
-                'fragment_retries': 5, # Retry failed fragments
-                'max_downloads': 1, # Process one download at a time
-                'verbose': True, # <--- ADD THIS LINE
-                'no_warnings': False, # <--- Consider adding this as well to see warnings
+                'sleep_interval': 5,
+                'fragment_retries': 5,
+                # 'max_downloads': 1, # <--- COMMENT OUT OR REMOVE THIS LINE
+                'verbose': True,
+                'no_warnings': False,
             }
             download_extension = 'mp3'
         else: # video
             output_template = os.path.join(temp_dir, f"{unique_id}.%(ext)s")
-            # --- MODIFIED YDL_OPTS FOR VIDEO ---
             ydl_opts = {
-                'format': 'bestvideo[height<=720]+bestaudio/best[height<=720]/best', # Prioritize 720p, merge video+audio
+                'format': 'bestvideo[height<=720]+bestaudio/best[height<=720]/best',
                 'outtmpl': output_template,
                 'noplaylist': True,
-                'merge_output_format': 'mp4', # Ensure output is mp4 after merging
-                'sleep_interval': 5, # Add a delay between requests
-                'fragment_retries': 5, # Retry failed fragments
-                'max_downloads': 1, # Process one download at a time
-                'verbose': True, # <--- ADD THIS LINE
-                'no_warnings': False, # <--- Consider adding this as well to see warnings
+                'merge_output_format': 'mp4',
+                'sleep_interval': 5,
+                'fragment_retries': 5,
+                # 'max_downloads': 1, # <--- COMMENT OUT OR REMOVE THIS LINE
+                'verbose': True,
+                'no_warnings': False,
             }
             download_extension = 'mp4'
 
@@ -750,3 +748,11 @@ if __name__ == '__main__':
     # Create templates on first run (or if they don't exist)
     # You might want to remove this line after the first successful run
     # if you intend to manually edit you
+    
+# A.py (at the very end of the file)
+
+if __name__ == '__main__':
+    # Add these lines if they are missing or commented out
+    with app.app_context(): # Ensure the app context is pushed for operations like db.create_all()
+        db.create_all() # This should create your database tables if they don't exist
+    app.run(debug=True) # debug=True is good for local development
