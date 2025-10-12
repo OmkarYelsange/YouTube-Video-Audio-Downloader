@@ -20,21 +20,7 @@ Here are some visual previews of the application's interface:
 ### Download History
 ![User Download History](./assets/Dashboard.png)
 *A section showcasing all your successfully completed downloads.*
-
-## Table of Contents
-- [About](#about)
-- [Features](#features)
-- [Technologies Used](#technologies-used)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Local Installation](#local-installation)
-  - [Database Initialization](#database-initialization)
-  - [Running Locally](#running-locally)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
-- [Acknowledgements](#acknowledgements)
-
+
 ## About
 A user-friendly web application built with Flask that enables authenticated users to download YouTube videos as either MP4 (video up to 720p) or MP3 (audio) files. It features a secure user authentication system and a personal dashboard to keep track of download history, focusing on completed downloads while automatically clearing failed attempts.
 
