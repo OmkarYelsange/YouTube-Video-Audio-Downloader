@@ -154,3 +154,11 @@ This project is licensed for personal and academic use only
 * [Flask-Bcrypt](https://flask-bcrypt.readthedocs.io/) - Bcrypt hashing for Flask.
 * [Render](https://render.com/) - For easy cloud deployment.
 * [PythonAnywhere](https://www.pythonanywhere.com/) - For simple Python web hosting.
+
+### Contact
+
+👤 **Omkar Yelsange**  
+💼 **GitHub:** [OmkarYelsange](https://github.com/OmkarYelsange)    
+📧 **Email:** omkaryelsange1010@gmail.com  
+🔗 **Project Repository:** [View on GitHub](https://github.com/OmkarYelsange/YouTube-Video-Audio-Downloader)  
+💬 **LinkedIn:** [Omkar Yelsange](https://www.linkedin.com/in/omkaryelsange)
