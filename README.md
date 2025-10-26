@@ -130,16 +130,7 @@ Contributions are welcome! If you'd like to improve this project, please follow 
 6.  Open a Pull Request.
 
 ## License
-This project is licensed for personal and academic use only
-
-## Acknowledgements
-* [Flask](https://flask.palletsprojects.com/) - The web framework used.
-* [yt-dlp](https://github.com/yt-dlp/yt-dlp) - The powerful command-line program for downloading videos.
-* [Flask-SQLAlchemy](https://flask-sqlalchemy.palletsprojects.com/) - SQLAlchemy integration for Flask.
-* [Flask-Login](https://flask-login.readthedocs.io/) - User session management for Flask.
-* [Flask-Bcrypt](https://flask-bcrypt.readthedocs.io/) - Bcrypt hashing for Flask.
-* [Render](https://render.com/) - For easy cloud deployment.
-* [PythonAnywhere](https://www.pythonanywhere.com/) - For simple Python web hosting.
+This project is licensed for personal and academic use only
 
 ### Contact
 
