@@ -120,15 +120,6 @@ After setting up the database, you can start the Flask development server:
 6.  Click the 'Download' button. The server will process the request, and the file will be sent to your browser as an attachment.
 7.  Successfully completed downloads will appear in your download history on the dashboard. Failed attempts will not be shown.
 
-## Contributing
-Contributions are welcome! If you'd like to improve this project, please follow these steps:
-1.  Fork the repository.
-2.  Create a new branch (`git checkout -b feature/your-feature-name`).
-3.  Make your changes.
-4.  Commit your changes (`git commit -m 'feat: Add new feature X'`).
-5.  Push to the branch (`git push origin feature/your-feature-name`).
-6.  Open a Pull Request.
-
 ## License
 This project is licensed for personal and academic use only
 
