@@ -118,10 +118,7 @@ After setting up the database, you can start the Flask development server:
 4.  Paste the YouTube video URL into the provided input field.
 5.  Select your desired download type: 'Audio' (MP3) or 'Video' (MP4).
 6.  Click the 'Download' button. The server will process the request, and the file will be sent to your browser as an attachment.
-7.  Successfully completed downloads will appear in your download history on the dashboard. Failed attempts will not be shown.
-
-## License
-This project is licensed for personal and academic use only
+7.  Successfully completed downloads will appear in your download history on the dashboard. Failed attempts will not be shown.
 
 ### Contact
 
